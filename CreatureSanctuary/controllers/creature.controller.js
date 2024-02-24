@@ -14,7 +14,7 @@ const CreatureController = {
 
     getAllCreatures: async (req, res) => {
         try {
-            const allCreatures = await Creature.find()
+            const allCreatures = await Creature.find().sort({ petType: 1, name: 1, createdAt: 1 }).collation({ locale: "en", strength: 1 })
             res.json(allCreatures)
         } catch (error) {
             console.log(error)

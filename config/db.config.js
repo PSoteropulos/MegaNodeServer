@@ -12,18 +12,35 @@ const DB_CONFIG = {
 
 // Asynchronously connect to all databases and store connections
 // mongoose.connect is for setting a DEFAULT db, but we use mongoose.createConnection instead since we have multiple dbs
+const connections = {}; // connections object outside of function so we can access then in each model
+
 const connectDBs = async () => {
-    const connections = {};
-    for (const [key, { uri, dbName }] of Object.entries(DB_CONFIG)) {
-        const thisConnection = await mongoose.createConnection(uri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            dbName,
-        });
-        console.log(`Successful connection to MongoDB database ${dbName}.`);
-        connections[key] = thisConnection; // Store the connection using the app identifier
-    }
-    return connections;
+    const connectionPromises = Object.entries(DB_CONFIG).map(async ([key, { uri, dbName }]) => {
+        try {
+            const connection = mongoose.createConnection(uri, {
+                dbName
+            });
+
+            // Await connection to be ready
+            await new Promise((resolve, reject) => {
+                connection.once('open', resolve);
+                connection.on('error', (err) => {
+                    console.error(`Connection error on database ${dbName}:`, err);
+                    reject(err); // Reject the promise on connection error
+                });
+            });
+
+            console.log(`Successful connection to MongoDB database ${dbName}.`);
+            connections[key] = connection; // Store the connection using the app identifier
+        } catch (error) {
+            console.error(`Failed to connect to ${dbName}:`, error);
+            throw error; // Rethrow to be caught by the outer catch block
+        }
+    });
+
+    // Wait for all connections to be established
+    await Promise.all(connectionPromises);
+    console.log("All databases connected successfully.");
 };
 
 // Function to retrieve a specific database connection by app identifier

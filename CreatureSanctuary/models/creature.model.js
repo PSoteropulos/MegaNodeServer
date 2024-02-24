@@ -1,45 +1,81 @@
 import { model, Schema } from 'mongoose';
+import { getDBConnection } from '../../config/db.config.js';
+import uniqueValidator from 'mongoose-unique-validator';
 
-const BookSchema = new Schema(
-    {
-        title: {
-            type: String,
-            required: [true, "Title is required."],
-            minlength: [2, "Title must be at least 2 characters long."],
-            maxlength: [255, "Title must be less than 255 characters long."]
-        },
-        author: {
-            type: String,
-            required: [true, "Author is required."],
-            minlength: [5, "Author must be at least 5 characters long."],
-            maxlength: [255, "Author must be less than 255 characters long"]
-        },
-        pages: {
-            type: Number,
-            required: [true, "Page count is required."],
-            min: [1, "Book must have at least 1 page."]
-        },
-        isAvailable: {
-            type: Boolean,
-            default: false
-        }
+
+const CreatureSchema = new Schema({
+
+    name: {
+        type: String,
+        required: [true, "Creature name is required."],
+        minLength: [3, "Creature name must be longer than 2 characters."],
+        maxLength: [25, " Creature name can not exceed 25 characters."],
+        trim: true,
+        unique: true,
+        uniqueCaseInsensitive: true
     },
-    { timestamps: true }
-);
 
-const Book = model("Book", BookSchema);
+    creatureType: {
+        type: String,
+        required: [true, "Creature type is required."],
+        minLength: [3, "Creature type must be longer than 2 characters."],
+        maxLength: [20, " Creature type can not exceed 20 characters."],
+        trim: true,
+        // enum:[
+        //     "Amphibian",
+        //     "Bird",
+        //     "Cat",
+        //     "Dog",
+        //     "Fish",
+        //     "Insect/Arachnid",
+        //     "Livestock",
+        //     "Reptile",
+        //     "Rodent",
+        //     "Other"
+        // ]
+    },
 
-export default Book;
+    description: {
+        type: String,
+        required: [true, "Creature description is required."],
+        minLength: [3, "Creature description must be longer than 2 characters."],
+        trim: true
+        // maxLength:[100," Creature description can not exceed 100 characters."],
+    },
 
+    skill1: {
+        type: String,
+        required: false,
+        trim: true
+        // minLength:[3, "Creature skills must be longer than 2 characters."],
+    },
 
+    skill2: {
+        type: String,
+        trim: true
+        // minLength:[3, "Creature skills must be longer than 2 characters."],
+    },
 
+    skill3: {
+        type: String,
+        trim: true
+        // minLength:[3, "Creature skills must be longer than 2 characters."],
+    },
 
-import mongoose from 'mongoose';
-import { getDBConnection } from '../config/db.config.js';
-import BookSchema from './schemas/BookSchema.js'; // Assuming you've defined your schema separately
+    likeCount: {
+        type: Number,
+    },
 
-// This tells the model which db to use (parameter in)
-const connection = getDBConnection('BookDB');
-const Book = connection.model('Book', BookSchema);
+    image: {
+        type: String,
+    }
 
-export default Book;
+}, { timestamps: true });
+
+CreatureSchema.plugin(uniqueValidator, { message: 'Creature name must be unique.' })
+
+// This tells the model which db to use (parameter)
+const connection = getDBConnection('creatureDB');
+const Creature = connection.model('Creature', CreatureSchema);
+
+export default Creature;
