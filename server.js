@@ -8,7 +8,26 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(express.json(), cors({ origin: 'http://localhost:5173' }));
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://creaturesanctuary.psoteropulos.com',
+    'https://creaturesanctuary.psoteropulos.com',
+    'https://anotherdomain.com',
+    // ... more origins
+];
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    // Additional CORS options if needed
+};
+
+app.use(express.json(), cors(corsOptions));
 
 const startServer = async () => {
     await connectDBs(); // Ensure all DB connections are established first
