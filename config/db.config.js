@@ -5,9 +5,9 @@ dotenv.config();
 
 // Organized configuration for database connections
 const DB_CONFIG = {
-    app1: { uri: process.env.APP1_MONGODB_URI, dbName: process.env.APP1_MONGODB_DB_NAME },
-    app2: { uri: process.env.APP2_MONGODB_URI, dbName: process.env.APP2_MONGODB_DB_NAME },
-    app3: { uri: process.env.APP3_MONGODB_URI, dbName: process.env.APP3_MONGODB_DB_NAME },
+    creatureDB: { uri: process.env.CREATURE_DB_URI, dbName: process.env.CREATURE_DB_NAME },
+    movieDB: { uri: process.env.MOVIE_DB_URI, dbName: process.env.MOVIE_DB_NAME },
+    restaurantDB: { uri: process.env.RESTAURANT_DB_URI, dbName: process.env.RESTAURANT_DB_NAME },
 };
 
 // Asynchronously connect to all databases and store connections
@@ -33,3 +33,5 @@ export const getDBConnection = (appName) => {
     }
     return connections[appName];
 };
+
+export default connectDBs;

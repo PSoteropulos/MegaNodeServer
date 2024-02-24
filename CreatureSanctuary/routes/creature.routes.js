@@ -1,20 +1,14 @@
 import { Router } from "express"
-import StoreController from "../controllers/store.controller.js"
-const storeRouter = Router()
+import CreatureController from "../controllers/creature.controller.js"
+const creatureRouter = Router()
 
-storeRouter.route("/stores")
-    .get(StoreController.getAllStores)
-    .post(StoreController.createStore)
+creatureRouter.route("/creatures")
+    .get(CreatureController.getAllCreatures)
+    .post(CreatureController.createCreature)
 
-storeRouter.route("/stores/open")
-    .get(StoreController.getAllOpenStores)
+creatureRouter.route("/creatures/:id")
+    .get(CreatureController.getOneCreature)
+    .put(CreatureController.updateOneCreature)
+    .delete(CreatureController.deleteOneCreature)
 
-storeRouter.route("/stores/closed")
-    .get(StoreController.getAllClosedStores)
-
-storeRouter.route("/stores/:id")
-    .get(StoreController.getOneStore)
-    .put(StoreController.updateOneStore)
-    .delete(StoreController.deleteOneStore)
-
-export default storeRouter
+export default creatureRouter
