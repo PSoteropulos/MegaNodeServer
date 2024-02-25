@@ -9,9 +9,9 @@ const CreatureSchema = new Schema({
         type: String,
         required: [true, "Creature name is required."],
         minLength: [3, "Creature name must be longer than 2 characters."],
-        maxLength: [25, " Creature name can not exceed 25 characters."],
+        maxLength: [25, "Creature name can not exceed 25 characters."],
         trim: true,
-        unique: true,
+        // unique: true,
         uniqueCaseInsensitive: true
     },
 
@@ -19,7 +19,7 @@ const CreatureSchema = new Schema({
         type: String,
         required: [true, "Creature type is required."],
         minLength: [3, "Creature type must be longer than 2 characters."],
-        maxLength: [20, " Creature type can not exceed 20 characters."],
+        maxLength: [20, "Creature type can not exceed 20 characters."],
         trim: true,
         // enum:[
         //     "Amphibian",
@@ -72,7 +72,7 @@ const CreatureSchema = new Schema({
 
 }, { timestamps: true });
 
-CreatureSchema.plugin(uniqueValidator, { message: 'Creature name must be unique.' })
+// CreatureSchema.plugin(uniqueValidator, { message: 'Creature name must be unique.' })
 
 // This tells the model which db to use (parameter)
 const connection = getDBConnection('creatureDB');
