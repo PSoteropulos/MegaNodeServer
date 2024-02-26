@@ -10,13 +10,13 @@ const RestaurantSchema = new Schema(
             maxlength: [100, "Restaurant name must be at most 100 characters long."],
             trim: true
         },
-        cuisine: {
-            type: String,
-            required: [true, "Restaurant cuisine is required."],
-            minlength: [3, "Restaurant cuisine must be at least 3 characters long."],
-            maxlength: [100, "Restaurant cuisine must be at most 100 characters long."],
-            trim: true
-        },
+        // cuisine: {
+        //     type: String,
+        //     required: [true, "Restaurant cuisine is required."],
+        //     minlength: [3, "Restaurant cuisine must be at least 3 characters long."],
+        //     maxlength: [100, "Restaurant cuisine must be at most 100 characters long."],
+        //     trim: true
+        // },
         number: {
             type: Number,
             required: [true, "Restaurant number is required."],

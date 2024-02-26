@@ -1,45 +1,45 @@
-import Creature from "../models/restaurant.model.js"
+import Restaurant from "../models/restaurant.model.js"
 
-const CreatureController = {
+const RestaurantController = {
 
-    createCreature: async (req, res) => {
+    createRestaurant: async (req, res) => {
         try {
-            // Check for an existing creature with the same name, case-insensitively
-            const existingCreature = await Creature.findOne({
+            // Check for an existing restaurant with the same name, case-insensitively
+            const existingRestaurant = await Restaurant.findOne({
                 name: { $regex: new RegExp("^" + req.body.name + "$", "i") }
             });
-            if (existingCreature) {
-                return res.status(400).json({ errors: { name: { message: 'Creature name must be unique.' } } });
+            if (existingRestaurant) {
+                return res.status(400).json({ errors: { name: { message: 'Restaurant name must be unique.' } } });
             }
-            const newCreature = await Creature.create(req.body);
-            res.json(newCreature);
+            const newRestaurant = await Restaurant.create(req.body);
+            res.status(201).json(newRestaurant);
         } catch (error) {
             console.log(error);
             res.status(400).json(error);
         }
     },
 
-    getAllCreatures: async (req, res) => {
+    getAllRestaurants: async (req, res) => {
         try {
-            const allCreatures = await Creature.find().sort({ petType: 1, name: 1, createdAt: 1 }).collation({ locale: "en", strength: 1 })
-            res.json(allCreatures)
+            const allRestaurants = await Restaurant.find()
+            res.json(allRestaurants)
         } catch (error) {
             console.log(error)
             res.status(400).json(error)
         }
     },
 
-    getOneCreature: async (req, res) => {
+    getOneRestaurant: async (req, res) => {
         try {
-            const foundCreature = await Creature.findById(req.params.id)
-            res.json(foundCreature)
+            const foundRestaurant = await Restaurant.findById(req.params.id)
+            res.json(foundRestaurant)
         } catch (error) {
             console.log(error)
             res.status(400).json(error)
         }
     },
 
-    updateOneCreature: async (req, res) => {
+    updateOneRestaurant: async (req, res) => {
         const options = {
             new: true,
             runValidators: true
@@ -47,31 +47,51 @@ const CreatureController = {
         try {
             // If name is being updated, check for uniqueness
             if (req.body.name) {
-                const existingCreature = await Creature.findOne({
+                const existingRestaurant = await Restaurant.findOne({
                     _id: { $ne: req.params.id },
                     name: { $regex: new RegExp("^" + req.body.name + "$", "i") }
                 });
-                if (existingCreature) {
-                    return res.status(400).json({ errors: { name: { message: 'Creature name must be unique.' } } });
+                if (existingRestaurant) {
+                    return res.status(400).json({ errors: { name: { message: 'Restaurant name must be unique.' } } });
                 }
             }
-            const updatedCreature = await Creature.findByIdAndUpdate(req.params.id, req.body, options);
-            res.json(updatedCreature);
+            const updatedRestaurant = await Restaurant.findByIdAndUpdate(req.params.id, req.body, options);
+            res.json(updatedRestaurant);
         } catch (error) {
             console.log(error);
             res.status(400).json(error);
         }
     },
 
-    deleteOneCreature: async (req, res) => {
+    deleteOneRestaurant: async (req, res) => {
         try {
-            const deletedCreature = await Creature.findByIdAndDelete(req.params.id);
-            res.json(deletedCreature);
+            const deletedRestaurant = await Restaurant.findByIdAndDelete(req.params.id);
+            res.json(deletedRestaurant);
         } catch (error) {
             console.log(error);
             res.status(400).json(error);
         }
+    },
+
+    getAllOpenRestaurants: async (req, res) => {
+        try {
+            const allOpenRestaurants = await Restaurant.find({isOpen: true})
+            res.json(allOpenRestaurants)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    },
+
+    getAllClosedRestaurants: async (req, res) => {
+        try {
+            const allClosedRestaurants = await Restaurant.find({isOpen: false})
+            res.json(allClosedRestaurants)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
     }
 }
 
-export default CreatureController
+export default RestaurantController
