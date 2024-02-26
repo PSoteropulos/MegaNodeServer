@@ -12,6 +12,8 @@ const allowedOrigins = [
     'http://localhost:5173',
     'http://creaturesanctuary.psoteropulos.com',
     'https://creaturesanctuary.psoteropulos.com',
+    'http://restaurantwrangler.psoteropulos.com',
+    'https://restaurantwrangler.psoteropulos.com',
     'https://anotherdomain.com',
     // ... more origins
 ];
@@ -21,7 +23,7 @@ const corsOptions = {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error('Not allowed by CORS.'));
         }
     },
     // Additional CORS options if needed
@@ -36,9 +38,8 @@ const startServer = async () => {
     const creatureRouterModule = await import('./CreatureSanctuary/routes/creature.routes.js');
     app.use('/api', creatureRouterModule.default);
 
-    // Assuming there are more routes to import, repeat the pattern:
-    // const anotherRouterModule = await import('./path/to/another/routes.js');
-    // app.use('/api/anotherPath', anotherRouterModule.default);
+    const restaurantRouterModule = await import('./RestaurantWrangler/routes/restaurant.routes.js');
+    app.use('/api', restaurantRouterModule.default);
 
     // After all asynchronous setup is complete, start listening for requests
 };
